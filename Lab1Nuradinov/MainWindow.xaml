@@ -1,0 +1,28 @@
+﻿<Window x:Class="Lab1Nuradinov.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Lab1Nuradinov"
+        mc:Ignorable="d"
+        Title="База данных угроз" Height="650" Width="1031.5"
+        x:Name="TestWindow"
+        Loaded="WindowLoaded">
+    <Grid>
+        <Grid DataContext="{Binding ElementName=TestWindow, Path=.}" >
+            <DataGrid x:Name="data" HorizontalAlignment="Left" AutoGenerateColumns="False" Height="442" Margin="10,14,0,0" VerticalAlignment="Top" Width="862" ItemsSource="{Binding Collection}" SelectionChanged="data_SelectionChanged" CanUserResizeRows="False" CanUserReorderColumns="False" CanUserResizeColumns="False" IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="УБИ" Binding="{Binding Path=Id}"/>
+                    <DataGridTextColumn Header="Наименование угрозы" Binding="{Binding Path=Name}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <Button Content="Обновить" HorizontalAlignment="Left" Margin="890,14,0,0" VerticalAlignment="Top" Width="123" RenderTransformOrigin="1.08,5.025" Click="Update"/>
+            <Button Content="Сохранить" HorizontalAlignment="Left" Margin="890,254,0,0" VerticalAlignment="Top" Width="123"/>
+            <Button Content="Следующая страница" HorizontalAlignment="Left" Margin="689,514,0,0" VerticalAlignment="Top" Width="123" Click="NextPage" Height="22"/>
+            <Button Content="Предыдущая страница" HorizontalAlignment="Left" Margin="162,514,0,0" VerticalAlignment="Top" Width="124" Click="PreviousPage" Height="22"/>
+            <Label Content="Страница" HorizontalAlignment="Left" Margin="920,568,0,0" VerticalAlignment="Top"/>
+            <Label Content="/: Created by Zhantai Nuradinovich :\" HorizontalAlignment="Left" Margin="382,568,0,0" VerticalAlignment="Top" FontStyle="Italic" FontFamily="Showcard Gothic"/>
+        </Grid>
+        <TextBlock x:Name="PageNumber" DataContext="{Binding ElementName=TextBlockPage, Path=.}" HorizontalAlignment="Left" Margin="911,573,0,0" TextWrapping="Wrap" Text="{Binding Path=pageNumber}" VerticalAlignment="Top"/>
+    </Grid>
+</Window>

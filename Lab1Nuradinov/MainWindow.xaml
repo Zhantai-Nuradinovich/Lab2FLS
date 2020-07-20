@@ -16,12 +16,14 @@
                     <DataGridTextColumn Header="Наименование угрозы" Binding="{Binding Path=Name}"/>
                 </DataGrid.Columns>
             </DataGrid>
-            <Button Content="Обновить" HorizontalAlignment="Left" Margin="890,14,0,0" VerticalAlignment="Top" Width="123" RenderTransformOrigin="1.08,5.025" Click="Update"/>
-            <Button Content="Сохранить" HorizontalAlignment="Left" Margin="890,254,0,0" VerticalAlignment="Top" Width="123"/>
-            <Button Content="Следующая страница" HorizontalAlignment="Left" Margin="689,514,0,0" VerticalAlignment="Top" Width="123" Click="NextPage" Height="22"/>
-            <Button Content="Предыдущая страница" HorizontalAlignment="Left" Margin="162,514,0,0" VerticalAlignment="Top" Width="124" Click="PreviousPage" Height="22"/>
-            <Label Content="Страница" HorizontalAlignment="Left" Margin="920,568,0,0" VerticalAlignment="Top" FontFamily="Showcard Gothic" FontStyle="Italic" FontWeight="Bold"/>
+            <Button Content="Обновить" Name="updateButton" HorizontalAlignment="Left" Margin="890,14,0,0" VerticalAlignment="Top" Width="123" RenderTransformOrigin="1.08,5.025" Click="Update"/>
+            <Button Content="Сохранить" Name="saveButton" HorizontalAlignment="Left" Margin="890,254,0,0" VerticalAlignment="Top" Width="123" Click="saveButtonClick"/>
+            <Button Content="Следующая страница" Name="nextPageButton" HorizontalAlignment="Left" Margin="689,514,0,0" VerticalAlignment="Top" Width="123" Click="NextPage" Height="22"/>
+            <Button Content="Предыдущая страница" Name="prevPageButton" HorizontalAlignment="Left" Margin="162,514,0,0" VerticalAlignment="Top" Width="124" Click="PreviousPage" Height="22"/>
+            <Button Content="Назад" Visibility="Hidden" Name="backComplexButton" HorizontalAlignment="Left" Margin="889,120,0,0" VerticalAlignment="Top" Width="124" Click="BackComplexButtonPressed" Height="22"/>
+            <Label Content="Страница" Name="Page" HorizontalAlignment="Left" Margin="920,568,0,0" VerticalAlignment="Top" FontFamily="Showcard Gothic" FontStyle="Italic" FontWeight="Bold"/>
             <Label Content="/: Created by Zhantai Nuradinovich :\" HorizontalAlignment="Left" Margin="382,568,0,0" VerticalAlignment="Top" FontStyle="Italic" FontFamily="Showcard Gothic"/>
+            <Label Content="Список обновленных угроз" Name="listOfUpdatedThreats" Visibility="Hidden" HorizontalAlignment="Left" Margin="418,461,0,0" VerticalAlignment="Top" FontStyle="Italic" FontFamily="Showcard Gothic" FontSize="14" FontWeight="Bold"/>
         </Grid>
         <TextBlock x:Name="PageNumber" DataContext="{Binding ElementName=TextBlockPage, Path=.}" HorizontalAlignment="Left" Margin="911,573,0,0" TextWrapping="Wrap" Text="{Binding Path=pageNumber}" VerticalAlignment="Top" FontFamily="Showcard Gothic" FontStyle="Italic"/>
     </Grid>

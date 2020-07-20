@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
+using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -30,12 +31,17 @@ namespace Lab1Nuradinov
         //Старых данных
         private static List<Threat> updateHistory;
 
+        //Словарь изменений
+        private static Dictionary<Threat, Threat> res = new Dictionary<Threat, Threat>();
+
         private static ThreatPage page;
+        private static UpdatedPage updatedPage;
         //Объект для сохранения контента, для переключения между страницой и гланвым окном
         public static ContentControl contentControl = new ContentControl();
 
         private static int pageNumber = 1;
         private static bool firstOrLastPage = true;
+        private static bool isClickedAfterUpdate = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -45,8 +51,8 @@ namespace Lab1Nuradinov
         {
             string pathToExcelFile = "D:/thrlist.xlsx";
             ParseExcel(pathToExcelFile);
-
-            data.ItemsSource = thrlist.GetRange((pageNumber-1)*20, 20);
+            
+            data.ItemsSource = thrlist.Count > 0 ? thrlist.GetRange((pageNumber-1)*20, 20):null;
             PageNumber.Text = pageNumber.ToString();
         }
 
@@ -96,60 +102,80 @@ namespace Lab1Nuradinov
         }
         private void data_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            contentControl.Content = this.Content;
-            Threat check = e.AddedItems.Count != 0 ? (Threat)e.AddedItems[0] : null;
-            page = new ThreatPage(check, thrlist);
-            if(check != null)
+            if (!isClickedAfterUpdate)
             {
-                this.Content = page;
+                contentControl.Content = this.Content;
+                Threat check = e.AddedItems.Count != 0 ? (Threat)e.AddedItems[0] : null;
+                page = new ThreatPage(check, thrlist);
+                if (check != null)
+                {
+                    this.Content = page;
+                }
+            }
+            else
+            {
+                contentControl.Content = this.Content;
+                Threat check = e.AddedItems.Count != 0 ? (Threat)e.AddedItems[0] : null;
+                updatedPage = new UpdatedPage(check, res);
+                if (check != null)
+                {
+                    this.Content = updatedPage;
+                }
             }
         }
 
         private void NextPage(object sender, RoutedEventArgs e)
         {
-            if(pageNumber* 20 + 20 < thrlist.Count)
+            if(thrlist.Count > 0)
             {
-                pageNumber++;
-                data.ItemsSource = thrlist.GetRange((pageNumber - 1) * 20, 20);
-                PageNumber.Text = pageNumber.ToString();
-                firstOrLastPage = true;
-            }
-            else if(firstOrLastPage)
-            {
-                pageNumber++;
-                data.ItemsSource = thrlist.GetRange((pageNumber - 1) * 20, thrlist.Count - (pageNumber - 1)*20);
-                PageNumber.Text = pageNumber.ToString();
-                firstOrLastPage = false;
-            }
-            else
-            {
-                pageNumber = 1;
-                data.ItemsSource = thrlist.GetRange((pageNumber - 1) * 20, 20);
-                PageNumber.Text = pageNumber.ToString();
-                firstOrLastPage = true;
+                if (pageNumber * 20 + 20 < thrlist.Count)
+                {
+                    pageNumber++;
+                    data.ItemsSource = thrlist.GetRange((pageNumber - 1) * 20, 20);
+                    PageNumber.Text = pageNumber.ToString();
+                    firstOrLastPage = true;
+                }
+                else if (firstOrLastPage)
+                {
+                    pageNumber++;
+                    data.ItemsSource = thrlist.GetRange((pageNumber - 1) * 20, thrlist.Count - (pageNumber - 1) * 20);
+                    PageNumber.Text = pageNumber.ToString();
+                    firstOrLastPage = false;
+                }
+                else
+                {
+                    pageNumber = 1;
+                    data.ItemsSource = thrlist.GetRange((pageNumber - 1) * 20, 20);
+                    PageNumber.Text = pageNumber.ToString();
+                    firstOrLastPage = true;
+                }
             }
         }
 
         private void PreviousPage(object sender, RoutedEventArgs e)
         {
-            if (pageNumber * 20 - 20 > 0)
+            if (thrlist.Count > 0)
             {
-                pageNumber--;
-                data.ItemsSource = thrlist.GetRange(pageNumber * 20 - 20, 20);
-                PageNumber.Text = pageNumber.ToString();
-                firstOrLastPage = true;
-            }
-            else
-            {
-                pageNumber = thrlist.Count % 20 == 0 ? thrlist.Count / 20 : thrlist.Count /20 + 1;
-                data.ItemsSource = thrlist.GetRange((pageNumber - 1) * 20, thrlist.Count - (pageNumber - 1) * 20);
-                PageNumber.Text = pageNumber.ToString();
-                firstOrLastPage = false;
+                if (pageNumber * 20 - 20 > 0)
+                {
+                    pageNumber--;
+                    data.ItemsSource = thrlist.GetRange(pageNumber * 20 - 20, 20);
+                    PageNumber.Text = pageNumber.ToString();
+                    firstOrLastPage = true;
+                }
+                else
+                {
+                    pageNumber = thrlist.Count % 20 == 0 ? thrlist.Count / 20 : thrlist.Count / 20 + 1;
+                    data.ItemsSource = thrlist.GetRange((pageNumber - 1) * 20, thrlist.Count - (pageNumber - 1) * 20);
+                    PageNumber.Text = pageNumber.ToString();
+                    firstOrLastPage = false;
+                }
             }
         }
 
         private void Update(object sender, RoutedEventArgs e)
         {
+            Decorate();
             data.ItemsSource = null;
             data.Items.Refresh();
 
@@ -174,29 +200,107 @@ namespace Lab1Nuradinov
                 MessageBoxImage icon = MessageBoxImage.Error;
                 MessageBox.Show(messageBoxText, caption, button, icon);
             }
+        }
+
+        public void BackComplexButtonPressed(object sender, RoutedEventArgs e)
+        {
+            isClickedAfterUpdate = false;
+            UnDecorate();
             pageNumber = 1;
             data.ItemsSource = thrlist.GetRange((pageNumber - 1) * 20, 20);
             PageNumber.Text = pageNumber.ToString();
             data.Items.Refresh();
         }
+        private void Decorate()
+        {
+            backComplexButton.Visibility = Visibility.Visible;
+            prevPageButton.Visibility = Visibility.Hidden;
+            nextPageButton.Visibility = Visibility.Hidden;
+            updateButton.Visibility = Visibility.Hidden;
+            saveButton.Visibility = Visibility.Hidden;
+            Page.Visibility = Visibility.Hidden;
+            PageNumber.Text = "";
+            listOfUpdatedThreats.Visibility = Visibility.Visible;
+        }
 
-        private static void Analise(List<Threat> thrlist, List<Threat> updateHistory)
+        private void UnDecorate()
+        {
+            backComplexButton.Visibility = Visibility.Hidden;
+            prevPageButton.Visibility = Visibility.Visible;
+            nextPageButton.Visibility = Visibility.Visible;
+            updateButton.Visibility = Visibility.Visible;
+            saveButton.Visibility = Visibility.Visible;
+            Page.Visibility = Visibility.Visible;
+            listOfUpdatedThreats.Visibility = Visibility.Hidden;
+        }
+
+        private void Analise(List<Threat> thrlist, List<Threat> updateHistory)
         {
             int count = 0;
 
-
-
-            string messageBoxText = "Успешно! Число обновленных записей равно " + count + "\n Открыть подробный список?";
-            string caption = "Сделано!";
-            MessageBoxButton button = MessageBoxButton.YesNo;
-            MessageBoxResult result = MessageBox.Show(messageBoxText, caption, button);
-
-            switch (result)
+            foreach (var item in thrlist)
             {
-                case MessageBoxResult.Yes:
-                    break;
-                case MessageBoxResult.No:
-                    break;
+                foreach (var itemOld in updateHistory)
+                {
+                    if (item.Id == itemOld.Id &&
+                        !item.ToString().Equals(itemOld.ToString()))
+                    {
+                        res.Add(item, itemOld);
+                        count++;
+                    }
+                }
+            }
+            if(count == 0)
+            {
+                string messageBoxText = "Нет обновленных записей!!";
+                string caption = "Сделано!";
+                MessageBoxButton button = MessageBoxButton.OK;
+                MessageBox.Show(messageBoxText, caption, button);
+            }
+            else
+            {
+                string messageBoxText = "Успешно! Число обновленных записей равно " + count + "\nОткрыть подробный список?";
+                string caption = "Сделано!";
+                MessageBoxButton button = MessageBoxButton.YesNo;
+                MessageBoxResult result = MessageBox.Show(messageBoxText, caption, button);
+
+                switch (result)
+                {
+                    case MessageBoxResult.Yes:
+                        //updateHistory = new List<Threat>(thrlist.FindAll(delegate(Threat a) 
+                        //{
+                        //   return a.IsChanged;
+                        //}));
+
+                        //data.ItemsSource = updateHistory;
+                        data.ItemsSource = res.Keys;
+                        data.Items.Refresh();
+                        isClickedAfterUpdate = true;
+                        break;
+                    case MessageBoxResult.No:
+                        break;
+                }
+            }
+        }
+
+        private void saveButtonClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string[] res = new string[thrlist.Count];
+                string path = "D:/thrlist.csv";
+                using (FileStream maker = File.Create(path))
+                {
+                    for (int i = 0; i < thrlist.Count; i++)
+                    {
+                        res[i] = thrlist[i].ToString();
+                    }
+                }
+                File.WriteAllLines(path, res);
+            }
+            finally
+            {
+                MessageBox.Show("Сохранено!!", "Сохранение файла", MessageBoxButton.OK);
             }
         }
     }

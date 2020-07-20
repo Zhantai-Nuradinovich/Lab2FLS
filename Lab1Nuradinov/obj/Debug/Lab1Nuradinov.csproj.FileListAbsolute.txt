@@ -44,3 +44,5 @@ D:\HW\Lab1Nuradinov\Lab2FLS\Lab1Nuradinov\obj\Debug\Lab1Nuradinov.csproj.CoreCom
 D:\HW\Lab1Nuradinov\Lab2FLS\Lab1Nuradinov\obj\Debug\Lab1Nuradinov.csproj.CopyComplete
 D:\HW\Lab1Nuradinov\Lab2FLS\Lab1Nuradinov\obj\Debug\Lab1Nuradinov.exe
 D:\HW\Lab1Nuradinov\Lab2FLS\Lab1Nuradinov\obj\Debug\Lab1Nuradinov.pdb
+D:\HW\Lab1Nuradinov\Lab2FLS\Lab1Nuradinov\obj\Debug\UpdatedPage.g.cs
+D:\HW\Lab1Nuradinov\Lab2FLS\Lab1Nuradinov\obj\Debug\UpdatedPage.baml

@@ -60,5 +60,12 @@ namespace Lab1Nuradinov
                 }
             }
         }
+
+        public bool IsChanged { get; set; } = false;
+
+        public override string ToString()
+        {
+            return Id + "," + Name + "," + Description + "," + ThreatSource + "," + ObjectOfInfluence + "," + ConfidentialityViolation + "," + IntegrityViolation + "," + AccessViolation;
+        }
     }
 }

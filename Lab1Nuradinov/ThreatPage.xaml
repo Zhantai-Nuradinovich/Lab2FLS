@@ -4,49 +4,47 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Lab1Nuradinov"
-      mc:Ignorable="d" 
-      d:DesignHeight="600" d:DesignWidth="862"
+      mc:Ignorable="d" d:DesignWidth="862"
       Title="Информация об угрозе"
-      Loaded="WindowLoaded">
+      Loaded="WindowLoaded" Height="678">
 
-    <Grid x:Name="dataThreat" DataContext="{Binding ElementName=TestWindow, Path=.}" UseLayoutRounding="False" Background="White">
+    <Grid x:Name="dataThreat" DataContext="{Binding ElementName=TestWindow, Path=.}" UseLayoutRounding="False" Background="White" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" ScrollViewer.HorizontalScrollBarVisibility="Auto" Height="668" VerticalAlignment="Top">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="400" />
+            <ColumnDefinition Width="500" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto" MaxHeight="200"/>
-            <RowDefinition Height="Auto" MaxHeight="200"/>
-            <RowDefinition Height="Auto" MaxHeight="200"/>
-            <RowDefinition Height="Auto" MaxHeight="200"/>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" MaxHeight="70"/>
+            <RowDefinition Height="Auto" MaxHeight="100"/>
+            <RowDefinition Height="Auto" MaxHeight="350"/>
+            <RowDefinition Height="Auto" MaxHeight="100"/>
+            <RowDefinition Height="Auto" MaxHeight="100"/>
+            <RowDefinition Height="Auto" MaxHeight="50"/>
+            <RowDefinition Height="Auto" MaxHeight="50"/>
+            <RowDefinition Height="Auto" MaxHeight="50"/>
         </Grid.RowDefinitions>
         <Label>Идентификатор УБИ</Label>
-        <TextBox Grid.Column="1" Text="{Binding Path=Id}" Margin="0,0,0,10" Padding="5" Background="#FFD1D1D1" />
+        <TextBox Grid.Column="1" IsReadOnly="True" Text="{Binding Path=Id}" Margin="0,0,0,10" Padding="5" Background="#FFD1D1D1" />
         <Label Grid.Row="1" >Наименование УБИ</Label>
-        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Path=Name}" TextWrapping="Wrap"  Margin="0,0,0,10" Padding="5" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Background="#FFD1D1D1"  />
+        <TextBox Grid.Row="1" Grid.Column="1" IsReadOnly="True" Text="{Binding Path=Name}" TextWrapping="Wrap"  Margin="0,0,0,10" Padding="5" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Background="#FFD1D1D1" HorizontalScrollBarVisibility="Auto"  />
         <Label Grid.Row="2">Описание</Label>
-        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Path=Description}" TextWrapping="Wrap"  Margin="0,0,0,10" Padding="5" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Background="#FFD1D1D1" />
+        <TextBox Grid.Row="2" Grid.Column="1" IsReadOnly="True" Text="{Binding Path=Description}" TextWrapping="Wrap"  Margin="0,0,0,10" Padding="5" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Background="#FFD1D1D1" />
         <Label Grid.Row="3">Источник угрозы (характеристика и потенциал нарушителя)</Label>
-        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Path=ThreatSource}" TextWrapping="Wrap"   Margin="0,0,0,10" Padding="5" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Background="#FFD1D1D1" />
+        <TextBox Grid.Row="3" Grid.Column="1" IsReadOnly="True" Text="{Binding Path=ThreatSource}" TextWrapping="Wrap"   Margin="0,0,0,10" Padding="5" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Background="#FFD1D1D1" />
         <Label Grid.Row="4">Объект воздействия</Label>
-        <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Path=ObjectOfInfluence}" TextWrapping="Wrap"  Margin="0,0,0,10" Padding="5" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" Background="#FFD1D1D1" />
+        <TextBox Grid.Row="4" Grid.Column="1" IsReadOnly="True" Text="{Binding Path=ObjectOfInfluence}" TextWrapping="Wrap"  Margin="0,0,0,10" Padding="5" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="True" Background="#FFD1D1D1" />
         <Label Grid.Row="5">Нарушение конфиденциальности</Label>
-        <TextBox Grid.Row="5" Grid.Column="1" Text="{Binding Path=ConfidentialityViolationString}" TextWrapping="Wrap"  Margin="0,0,0,10" Padding="5" Background="#FFD1D1D1" ></TextBox>
+        <TextBox Grid.Row="5" Grid.Column="1" IsReadOnly="True" Text="{Binding Path=ConfidentialityViolationString}" TextWrapping="Wrap"  Margin="0,0,0,10" Padding="5" Background="#FFD1D1D1" ></TextBox>
         <Label Grid.Row="6">Нарушение целостности</Label>
-        <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding Path=IntegrityViolationString}" TextWrapping="Wrap"  Margin="0,0,0,10" Padding="5" Background="#FFD1D1D1" ></TextBox>
+        <TextBox Grid.Row="6" Grid.Column="1" IsReadOnly="True" Text="{Binding Path=IntegrityViolationString}" TextWrapping="Wrap"  Margin="0,0,0,10" Padding="5" Background="#FFD1D1D1" ></TextBox>
         <Label Grid.Row="7">Нарушение доступности</Label>
-        <TextBox Grid.Row="7" Grid.Column="1" Text="{Binding Path=AccessViolationString}" TextWrapping="Wrap"  Margin="0,0,0,10" Padding="5" Background="#FFD1D1D1" ></TextBox>
-        <Button Content="Предыдущая запись" HorizontalAlignment="Left" Margin="60,10,-78,0" Grid.Row="1" VerticalAlignment="Top" Width="138" Grid.Column="2" Click="ShowPreviousThreat"/>
-        <Button Content="Следующая запись" Grid.Column="2" HorizontalAlignment="Left" Margin="60,39,-78,0" VerticalAlignment="Top" Width="138" RenderTransformOrigin="0.176,0.575" Click="ShowNextThreat"/>
-        <Button Content="Назад" Grid.Column="2" HorizontalAlignment="Left" Margin="60,3,-78,0" VerticalAlignment="Top" Width="138" Click="BackButtonPressed"/>
-        <Rectangle Grid.Column="1" HorizontalAlignment="Left" Height="971" Margin="0,0,0,-470" Stroke="Black" VerticalAlignment="Top" Width="400" Grid.RowSpan="8"/>
+        <TextBox Grid.Row="7" Grid.Column="1" IsReadOnly="True" Text="{Binding Path=AccessViolationString}" TextWrapping="Wrap"  Margin="0,0,0,10" Padding="5" Background="#FFD1D1D1" ></TextBox>
+        <Button Content="Предыдущая запись" HorizontalAlignment="Left" Margin="30,18,-148,0" Grid.Row="1" VerticalAlignment="Top" Width="138" Grid.Column="2" Click="ShowPreviousThreat"/>
+        <Button Content="Следующая запись" Grid.Column="2" HorizontalAlignment="Left" Margin="30,45,-148,0" VerticalAlignment="Top" Width="138" RenderTransformOrigin="0.176,0.575" Click="ShowNextThreat"/>
+        <Button Content="Назад" Grid.Column="2" HorizontalAlignment="Left" Margin="30,3,-148,0" VerticalAlignment="Top" Width="138" Click="BackButtonPressed"/>
+        <Rectangle Grid.Column="1" HorizontalAlignment="Left" Height="970" Margin="0,0,0,-354" Stroke="Black" VerticalAlignment="Top" Width="500" Grid.RowSpan="8"/>
         <Rectangle HorizontalAlignment="Left" Height="971" Margin="0,0,0,-507" VerticalAlignment="Top" Width="342" Grid.RowSpan="8" Stroke="Black"/>
-        <Rectangle Grid.Column="2" HorizontalAlignment="Left" Height="1123" Margin="0,0,-640,-594" Stroke="Black" VerticalAlignment="Top" Width="760" Grid.RowSpan="8"/>
-        <Button Content="Сохранить изменения" Grid.Column="2" HorizontalAlignment="Left" Margin="60,52,-78,-5" VerticalAlignment="Top" Width="138" Click="SaveEdit" Grid.Row="7"/>
+        <Rectangle Grid.Column="2" HorizontalAlignment="Left" Height="1123" Margin="0,0,-740,-523" Stroke="Black" VerticalAlignment="Top" Width="760" Grid.RowSpan="8"/>
     </Grid>
 </Page>

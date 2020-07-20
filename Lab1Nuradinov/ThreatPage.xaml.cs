@@ -56,10 +56,5 @@ namespace Lab1Nuradinov
             singleton.Add(threat);
             dataThreat.DataContext = singleton;
         }
-
-        private void SaveEdit(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }

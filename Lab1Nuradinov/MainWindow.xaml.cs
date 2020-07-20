@@ -25,9 +25,15 @@ namespace Lab1Nuradinov
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static List<Threat> thrlist = new List<Threat>();
+        //База данных угроз
+        private static volatile List<Threat> thrlist = new List<Threat>();
+        //Старых данных
+        private static List<Threat> updateHistory;
+
         private static ThreatPage page;
+        //Объект для сохранения контента, для переключения между страницой и гланвым окном
         public static ContentControl contentControl = new ContentControl();
+
         private static int pageNumber = 1;
         private static bool firstOrLastPage = true;
         public MainWindow()
@@ -78,9 +84,7 @@ namespace Lab1Nuradinov
                     case MessageBoxResult.Yes:
                         WebClient wc = new WebClient();
                         string url = "http://bdu.fstec.ru/files/documents/thrlist.xlsx";
-                        string savePath = "D:/";
-                        string name = "thrlist.xlsx";
-                        wc.DownloadFile(url, savePath + name);
+                        wc.DownloadFile(url, pathToExcelFile);
 
                         ParseExcel(pathToExcelFile);
                         break;
@@ -137,7 +141,7 @@ namespace Lab1Nuradinov
             }
             else
             {
-                pageNumber = thrlist.Count % 20 == 0 ? thrlist.Count / 20 : thrlist.Count /20 +1;
+                pageNumber = thrlist.Count % 20 == 0 ? thrlist.Count / 20 : thrlist.Count /20 + 1;
                 data.ItemsSource = thrlist.GetRange((pageNumber - 1) * 20, thrlist.Count - (pageNumber - 1) * 20);
                 PageNumber.Text = pageNumber.ToString();
                 firstOrLastPage = false;
@@ -146,12 +150,54 @@ namespace Lab1Nuradinov
 
         private void Update(object sender, RoutedEventArgs e)
         {
-            thrlist.Clear();
-            string pathToExcelFile = "D:/thrlist.xlsx";
-            ParseExcel(pathToExcelFile);
+            data.ItemsSource = null;
             data.Items.Refresh();
+
+            updateHistory = new List<Threat>(thrlist);
+            thrlist.Clear();
+
+            string pathToExcelFile = "D:/thrlist.xlsx";
+            WebClient wc = new WebClient();
+            string url = "http://bdu.fstec.ru/files/documents/thrlist.xlsx";
+            wc.DownloadFile(url, pathToExcelFile);
+
+            try
+            {
+                ParseExcel(pathToExcelFile);
+                Analise(thrlist, updateHistory);
+            }
+            catch (Exception x)
+            {
+                string messageBoxText = x.Message;
+                string caption = "Ошибка!!";
+                MessageBoxButton button = MessageBoxButton.OK;
+                MessageBoxImage icon = MessageBoxImage.Error;
+                MessageBox.Show(messageBoxText, caption, button, icon);
+            }
+            pageNumber = 1;
             data.ItemsSource = thrlist.GetRange((pageNumber - 1) * 20, 20);
             PageNumber.Text = pageNumber.ToString();
+            data.Items.Refresh();
+        }
+
+        private static void Analise(List<Threat> thrlist, List<Threat> updateHistory)
+        {
+            int count = 0;
+
+
+
+            string messageBoxText = "Успешно! Число обновленных записей равно " + count + "\n Открыть подробный список?";
+            string caption = "Сделано!";
+            MessageBoxButton button = MessageBoxButton.YesNo;
+            MessageBoxResult result = MessageBox.Show(messageBoxText, caption, button);
+
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    break;
+                case MessageBoxResult.No:
+                    break;
+            }
         }
     }
 }

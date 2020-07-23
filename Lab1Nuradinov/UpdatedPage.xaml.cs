@@ -21,15 +21,12 @@ namespace Lab1Nuradinov
     public partial class UpdatedPage
     {
         private Threat threat;
-        private Threat updatedThreat;
         private Dictionary<Threat, Threat> res;
         public UpdatedPage(Threat threatLink, Dictionary<Threat, Threat> res) 
         {
             InitializeComponent();
             threat = threatLink;
             this.res = res;
-
-            updatedThreat = res[threat];
         }
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
@@ -37,9 +34,9 @@ namespace Lab1Nuradinov
             List<Threat> comparative = new List<Threat>();
 
             comparative.Add(threat);
-            comparative.Add(updatedThreat);
+            comparative.Add(res[threat]);
 
-            dataThreat.DataContext = comparative;
+            dataThreatWas.DataContext = comparative;
         }
 
         private void BackButtonPressed(object sender, RoutedEventArgs e)

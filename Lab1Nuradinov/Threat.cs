@@ -60,12 +60,10 @@ namespace Lab1Nuradinov
                 }
             }
         }
-
-        public bool IsChanged { get; set; } = false;
-
+        public DateTime LastDateOfChange { get; set; }
         public override string ToString()
         {
-            return Id + "," + Name + "," + Description + "," + ThreatSource + "," + ObjectOfInfluence + "," + ConfidentialityViolation + "," + IntegrityViolation + "," + AccessViolation;
+            return Id + "," + Name + "," + Description + "," + ThreatSource + "," + ObjectOfInfluence + "," + ConfidentialityViolationString + "," + IntegrityViolationString + "," + AccessViolationString;
         }
     }
 }

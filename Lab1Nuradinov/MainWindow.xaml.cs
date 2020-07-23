@@ -70,11 +70,15 @@ namespace Lab1Nuradinov
                     ConxObject.AddMapping("ConfidentialityViolation", "Нарушение конфиденциальности");
                     ConxObject.AddMapping("IntegrityViolation", "Нарушение целостности");
                     ConxObject.AddMapping("AccessViolation", "Нарушение доступности");
+                    ConxObject.AddMapping("LastDateOfChange", "Дата последнего изменения данных");
 
                     var list = from a in ConxObject.WorksheetRange<Threat>("A2", "J250", "Sheet")
                                select a;
 
-                    thrlist.AddRange(list);
+                    thrlist.AddRange(list.Where(delegate(Threat a)
+                    {
+                        return a.Id != 0;
+                    }));
                 }
             }
             catch (OleDbException)
@@ -190,11 +194,11 @@ namespace Lab1Nuradinov
             try
             {
                 ParseExcel(pathToExcelFile);
-                Analise(thrlist, updateHistory);
+                Analise();
             }
             catch (Exception x)
             {
-                string messageBoxText = x.Message;
+                string messageBoxText = x.Message + "\n" + x.GetType().Name + "\n";
                 string caption = "Ошибка!!";
                 MessageBoxButton button = MessageBoxButton.OK;
                 MessageBoxImage icon = MessageBoxImage.Error;
@@ -202,6 +206,7 @@ namespace Lab1Nuradinov
             }
         }
 
+        //Метод для возврата списка всех угроз на главное окно
         public void BackComplexButtonPressed(object sender, RoutedEventArgs e)
         {
             isClickedAfterUpdate = false;
@@ -234,23 +239,21 @@ namespace Lab1Nuradinov
             listOfUpdatedThreats.Visibility = Visibility.Hidden;
         }
 
-        private void Analise(List<Threat> thrlist, List<Threat> updateHistory)
+        private void Analise()
         {
-            int count = 0;
-
             foreach (var item in thrlist)
             {
-                foreach (var itemOld in updateHistory)
+                var itemOld = updateHistory.Find((Threat a) =>
                 {
-                    if (item.Id == itemOld.Id &&
-                        !item.ToString().Equals(itemOld.ToString()))
-                    {
-                        res.Add(item, itemOld);
-                        count++;
-                    }
+                    return a.Id == item.Id;
+                });
+
+                if(itemOld!=null && item.LastDateOfChange != itemOld.LastDateOfChange)
+                {
+                    res.Add(item, itemOld);
                 }
             }
-            if(count == 0)
+            if(res.Count == 0)
             {
                 string messageBoxText = "Нет обновленных записей!!";
                 string caption = "Сделано!";
@@ -259,7 +262,7 @@ namespace Lab1Nuradinov
             }
             else
             {
-                string messageBoxText = "Успешно! Число обновленных записей равно " + count + "\nОткрыть подробный список?";
+                string messageBoxText = "Успешно! Число обновленных записей равно " + res.Count + "\nОткрыть подробный список?";
                 string caption = "Сделано!";
                 MessageBoxButton button = MessageBoxButton.YesNo;
                 MessageBoxResult result = MessageBox.Show(messageBoxText, caption, button);
@@ -267,12 +270,6 @@ namespace Lab1Nuradinov
                 switch (result)
                 {
                     case MessageBoxResult.Yes:
-                        //updateHistory = new List<Threat>(thrlist.FindAll(delegate(Threat a) 
-                        //{
-                        //   return a.IsChanged;
-                        //}));
-
-                        //data.ItemsSource = updateHistory;
                         data.ItemsSource = res.Keys;
                         data.Items.Refresh();
                         isClickedAfterUpdate = true;
